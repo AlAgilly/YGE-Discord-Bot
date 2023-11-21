@@ -3,7 +3,7 @@
 
 
 // const { Client, Intents } = require('discord.js');
-const { getDiscordUsernames, updateRoles } = require('./notion');
+const { getDiscordUsernames: getStaffUsernames, updateRoles } = require('./notion');
 
 // Require the necessary discord.js classes
 const { Client, Events, GatewayIntentBits } = require('discord.js');
@@ -19,19 +19,59 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
+async function getMembers(staffUsernames, guildid, roleid) {
+  const guild = client.guilds.cache.get(guildid);
+  const role = guild.roles.cache.get(roleid);
+  await guild.members.fetch();
+  await updateRoles(staffUsernames, guild, role);
+}
 
 async function update() {
   try {
-    const usernames = await getDiscordUsernames();
+    const staffUsernames = await getStaffUsernames();
+    const playerUsernames = await getStaffUsernames();
 
-    const guildId = '1155742859903914014';
-    const roleId = '1171272378790191104';
-    const guild = client.guilds.cache.get(guildId);
-    const role = guild.roles.cache.get(roleId);
+    // TFT
+    const serverTFT = '1155742859903914014';
+    const roleTFT = '1171272378790191104';
+    await getMembers(staffUsernames, serverTFT, roleTFT)
+    console.log('TFT roles updated successfully!');
 
-    await guild.members.fetch();
-    await updateRoles(usernames, guild, role);
-    console.log('Roles updated successfully!');
+    // Valorant
+    const serverVAL = '901275394517368842';
+    const roleVAL = '919037546598629466';
+    await getMembers(staffUsernames, serverVAL, roleVAL)
+    console.log('VAL roles updated successfully!');
+
+    // League of Legends
+    const serverLOL = '1036869286356074516';
+    const roleLOL = '1036869286356074519';
+    await getMembers(staffUsernames, serverLOL, roleLOL)
+    console.log('LOL roles updated successfully!');
+
+    // Overwatch
+    const serverOW = '1029476466402017473';
+    const roleOW = '1163167721568088154';
+    await getMembers(staffUsernames, serverOW, roleOW)
+    console.log('OW roles updated successfully!');
+
+    // // League of Legends
+    // const serverLOL = '1036869286356074516';
+    // const roleLOL = '1036869286356074519';
+    // await getMembers(usernames, serverLOL, roleLOL)
+    // console.log('LOL roles updated successfully!');
+
+    // // League of Legends
+    // const serverLOL = '1036869286356074516';
+    // const roleLOL = '1036869286356074519';
+    // await getMembers(usernames, serverLOL, roleLOL)
+    // console.log('LOL roles updated successfully!');
+
+    // // League of Legends
+    // const serverLOL = '1036869286356074516';
+    // const roleLOL = '1036869286356074519';
+    // await getMembers(usernames, serverLOL, roleLOL)
+    console.log('LOL roles updated successfully!');
     // await client.destroy();
 
   } catch (error) {
